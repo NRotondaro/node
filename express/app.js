@@ -1,31 +1,44 @@
 const express = require('express');
 const app = express();
-const morgan = require('morgan');
-const logger = require('./logger');
-const authorize = require('./authorize');
+let { people } = require('./data');
 
-// 1. use vs route
-// 2. options - our own / express / third party
+// static assets
+app.use(express.static('./methods-public'));
+// parse form data
+app.use(express.urlencoded({ extended: false }));
+// parse json
+app.use(express.json());
 
-// app.use([logger, authorize]);
-// app.use(express.static('./public'))
-app.use(morgan('tiny'));
-
-app.get('/', (req, res) => {
-  res.send('Home');
+app.get('/api/people', (req, res) => {
+  res.status(200).json({ success: true, data: people });
 });
 
-app.get('/about', (req, res) => {
-  res.send('About');
+app.post('/api/people', (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res
+      .status(400)
+      .json({ success: false, msg: 'please provide name value' });
+  }
+  res.status(201).send({ success: true, person: name });
 });
 
-app.get('/api/products', (req, res) => {
-  res.send('Products');
+app.post('/api/postman/people', (req, res) => {
+  const { name } = req.body;
+  if (!name) {
+    return res
+      .status(400)
+      .json({ success: false, msg: 'please provide name value' });
+  }
+  res.status(201).send({ success: true, data: [...people, name] });
 });
 
-app.get('/api/items', (req, res) => {
-  console.log(req.user);
-  res.send('Items');
+app.post('/login', (req, res) => {
+  const { name } = req.body;
+  if (name) {
+    return res.status(200).send(`Welcome ${name}`);
+  }
+  res.status(401).send('Please Provide Credentials');
 });
 
 app.listen(5000, () => {
