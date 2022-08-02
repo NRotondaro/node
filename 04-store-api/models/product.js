@@ -1,4 +1,4 @@
-const mongoose = require('mongoose')
+const mongoose = require('mongoose');
 
 const productSchema = new mongoose.Schema({
   name: {
@@ -27,8 +27,8 @@ const productSchema = new mongoose.Schema({
       values: ['ikea', 'liddy', 'caressa', 'marcos'],
       message: '{VALUE} is not supported',
     },
-    // enum: ['ikea', 'liddy', 'caressa', 'marcos'],
+    /* enum: ['ikea', 'liddy', 'caressa', 'marcos'], */
   },
-})
+});
 
-module.exports = mongoose.model('Product', productSchema)
+module.exports = mongoose.model('Product', productSchema);
